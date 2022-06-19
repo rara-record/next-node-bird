@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import { Menu, Input, Button } from "antd";
+import { Menu, Input, Button, Row, Col } from "antd";
 import PropTypes from "prop-types";
 
 const AppLayout = ({ children }) => {
@@ -29,7 +29,21 @@ const AppLayout = ({ children }) => {
         </Menu.Item>
       </Menu>
 
-      {children}
+      {/* 
+        기본적으로 24등분 
+        컬럼 사이의 간격: gutter
+      */}
+      <Row gutter={8}>
+        <Col xs={24} md={6}>
+          왼쪽메뉴
+        </Col>
+        <Col xs={24} md={12}>
+          {children}
+        </Col>
+        <Col xs={24} md={6}>
+          오른쪽메뉴
+        </Col>
+      </Row>
     </div>
   );
 };
