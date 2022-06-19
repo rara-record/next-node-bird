@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import PropTypes from "prop-types";
 import LoginForm from "./LoginForm";
+import styled from "styled-components";
 import UserProfile from "./UserProfile";
 import { Menu, Input, Button, Row, Col } from "antd";
 
@@ -22,7 +23,7 @@ const AppLayout = ({ children }) => {
           </Link>
         </Menu.Item>
         <Menu.Item key="mail">
-          <Input.Search enterButton style={{ verticalAlign: "middle" }} />
+          <SearchInput enterButton />
         </Menu.Item>
         <Menu.Item key="signup">
           <Link href="/signup">
@@ -51,6 +52,10 @@ const AppLayout = ({ children }) => {
     </div>
   );
 };
+
+const SearchInput = styled(Input.Search)`
+  vertical-align: "middle";
+`;
 
 AppLayout.propTypes = {
   children: PropTypes.node.isRequired,

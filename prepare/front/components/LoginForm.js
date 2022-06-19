@@ -1,6 +1,7 @@
+import Link from "next/link";
+import styled from "styled-components";
 import React, { useState, useCallback } from "react";
 import { Form, Input, Button } from "antd";
-import Link from "next/link";
 
 const LoginForm = () => {
   const [id, setId] = useState("");
@@ -40,7 +41,7 @@ const LoginForm = () => {
         />
       </div>
 
-      <div>
+      <ButtonWrapper>
         <Button type="primary" htmlType="submit" loading={false}>
           로그인
         </Button>
@@ -49,9 +50,13 @@ const LoginForm = () => {
             <Button>회원가입</Button>
           </a>
         </Link>
-      </div>
+      </ButtonWrapper>
     </Form>
   );
 };
+
+const ButtonWrapper = styled.div`
+  margin-top: 10px;
+`;
 
 export default LoginForm;
