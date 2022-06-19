@@ -1,14 +1,14 @@
-import React from 'react'
-import AppLayout from '../components/AppLayout'
+import React from "react";
+import AppLayout from "../components/AppLayout";
 
 function Home() {
   return (
     <div>
       <AppLayout>
         <div>Hello, Next!</div>
-        </AppLayout>
+      </AppLayout>
     </div>
-  )
+  );
 }
 
-export default Home
+export default Home;
