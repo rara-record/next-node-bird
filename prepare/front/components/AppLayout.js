@@ -8,6 +8,8 @@ import UserProfile from "./UserProfile";
 import styled, { createGlobalStyle } from "styled-components";
 import { Layout, Menu, Input, Row, Col } from "antd";
 
+import { useSelector } from "react-redux";
+
 const Global = createGlobalStyle`
 .ant-row {
   margin-left: 0 !important;
@@ -53,8 +55,9 @@ const menuItems = [
 
 const AppLayout = ({ children }) => {
   const { Header, Content } = Layout;
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { isLoggedIn } = useSelector((state) => state.user);
   const [current, setCurrent] = useState("home");
+
   const onMenu = (e) => {
     setCurrent(e.key);
   };
@@ -88,11 +91,7 @@ const AppLayout = ({ children }) => {
         >
           <Row gutter={8}>
             <Col xs={24} md={6}>
-              {isLoggedIn ? (
-                <UserProfile setIsLoggedIn={setIsLoggedIn} />
-              ) : (
-                <LoginForm setIsLoggedIn={setIsLoggedIn} />
-              )}
+              {isLoggedIn ? <UserProfile /> : <LoginForm />}
             </Col>
             <Col xs={24} md={12}>
               {children}

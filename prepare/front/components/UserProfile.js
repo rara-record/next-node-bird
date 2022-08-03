@@ -4,9 +4,14 @@ import Link from "next/link";
 import { Avatar, Button, Card } from "antd";
 import { LogoutOutlined } from "@ant-design/icons";
 
-const UserProfile = ({ setIsLoggedIn }) => {
+import { useDispatch } from "react-redux";
+import { logout } from "../reducers/user";
+
+const UserProfile = () => {
+  const dispatch = useDispatch();
+
   const onLogout = useCallback(() => {
-    setIsLoggedIn(false);
+    dispatch(logout());
   }, []);
 
   return (
