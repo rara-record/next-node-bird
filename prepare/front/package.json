@@ -10,18 +10,26 @@
   "license": "ISC",
   "dependencies": {
     "@ant-design/icons": "^4.7.0",
-    "antd": "^4.21.3",
+    "@reduxjs/toolkit": "^1.8.3",
+    "antd": "^4.22.3",
     "next": "^9.5.5",
-    "prop-types": "^15.8.0",
+    "next-redux-wrapper": "^6.0.2",
+    "prop-types": "^15.8.1",
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
+    "react-redux": "^8.0.2",
+    "redux": "^4.2.0",
+    "redux-logger": "^3.0.6",
     "styled-components": "^5.3.5"
   },
   "description": "",
   "devDependencies": {
     "eslint": "^8.18.0",
     "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^6.0.0",
     "eslint-plugin-react": "^7.30.0",
-    "eslint-plugin-react-hooks": "^4.6.0"
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-standard": "^5.0.0"
   }
 }
