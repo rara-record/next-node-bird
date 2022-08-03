@@ -55,17 +55,10 @@ const PostForm = () => {
       </Form.Item>
 
       <div style={{ position: "relative", margin: 0 }}>
-        <Button
-          onClick={onClickImageUpload}
-          style={{ position: "absolute", right: 80, bottom: "-15px" }}
-        >
+        <Button onClick={onClickImageUpload}>
           <UploadOutlined /> 이미지 업로드
         </Button>
-        <Button
-          type="primary"
-          htmlType="submit"
-          style={{ position: "absolute", right: 0, bottom: "-15px" }}
-        >
+        <Button type="primary" htmlType="submit">
           올리기
         </Button>
       </div>
