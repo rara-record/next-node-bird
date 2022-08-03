@@ -1,10 +1,15 @@
 import Link from "next/link";
-import styled from "styled-components";
-import React, { useState, useCallback } from "react";
-import { Form, Input, Button } from "antd";
 import PropTypes from "prop-types";
+import styled from "styled-components";
 
-const LoginForm = ({ setIsLoggedIn }) => {
+import { Form, Input, Button } from "antd";
+import React, { useState, useCallback } from "react";
+
+import { useDispatch } from "react-redux";
+import { login } from "../reducers/user";
+
+const LoginForm = () => {
+  const dispatch = useDispatch();
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
 
@@ -17,8 +22,7 @@ const LoginForm = ({ setIsLoggedIn }) => {
   }, []);
 
   const onSubmitForm = useCallback(() => {
-    console.log(id, password);
-    setIsLoggedIn(true);
+    dispatch(login(id, password));
   }, [id, password]);
 
   return (
