@@ -1,17 +1,8 @@
-import Link from "next/link";
 import PropTypes from "prop-types";
+import PostImages from "./PostImages";
 
-import React, { useState, useCallback, useEffect } from "react";
-import {
-  Avatar,
-  Button,
-  Card,
-  Divider,
-  message,
-  Popconfirm,
-  Popover,
-  Tooltip,
-} from "antd";
+import React, { useState, useCallback } from "react";
+import { Avatar, Button, Card, Popover } from "antd";
 import {
   AlertOutlined,
   DeleteOutlined,
@@ -24,44 +15,120 @@ import {
   ZoomInOutlined,
 } from "@ant-design/icons";
 
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
 function PostCard({ post }) {
+  const id = useSelector((state) => state.user.me?.id);
+  const [liked, setliked] = useState(false);
+  const [commentFormOpened, setCommentFormOpened] = useState(false);
+
   const onZoomPost = useCallback(() => {}, []);
 
   const onRetweet = useCallback(() => {}, []);
 
-  const onUnlikePost = useCallback(() => {}, []);
+  const onToggleLike = useCallback(() => {
+    setliked((prev) => !prev);
+  }, []);
 
-  const onToggleComment = useCallback(() => {}, []);
+  const onToggleComment = useCallback(() => {
+    setCommentFormOpened((prev) => !prev);
+  }, []);
 
   return (
     <div style={{ marginBottom: 20 }}>
       <Card
+        cover={
+          post.Images[0] && (
+            <PostImages id={post.User.id} images={post.Images} />
+          )
+        }
         actions={[
-          <ZoomInOutlined key="zoom" title="자세히" onClick={onZoomPost} />,
+          // <ZoomInOutlined key="zoom" title="자세히" onClick={onZoomPost} />,
           <RetweetOutlined key="retweet" title="리트윗" onClick={onRetweet} />,
-          <HeartTwoTone
-            twoToneColor="#eb2f96"
-            title="좋아요"
-            key="heart"
-            onClick={onUnlikePost}
-          />,
+          liked ? (
+            <HeartTwoTone
+              twoToneColor="#eb2f96"
+              title="좋아요"
+              key="heart"
+              onClick={onToggleLike}
+            />
+          ) : (
+            <HeartOutlined key="heart" title="좋아요" onClick={onToggleLike} />
+          ),
           <MessageOutlined
             key="message"
             title="댓글"
             onClick={onToggleComment}
           />,
+          <Popover
+            key="more"
+            content={
+              <Button.Group>
+                {id && post.User.id === id ? (
+                  <>
+                    {!post.RetweetId && (
+                      <Button>
+                        <EditOutlined /> 수정
+                      </Button>
+                    )}
+
+                    <Button type="danger">
+                      <DeleteOutlined /> 삭제
+                    </Button>
+                  </>
+                ) : (
+                  <Button>
+                    <AlertOutlined /> 신고
+                  </Button>
+                )}
+              </Button.Group>
+            }
+          >
+            <EllipsisOutlined />
+          </Popover>,
         ]}
       >
-        {/* <Content />
-        <Buttons></Buttons> */}
+        <Card.Meta
+          avatar={<Avatar>{post.User.nickname[0]}</Avatar>}
+          title={post.User.nickname}
+          description={post.content}
+        ></Card.Meta>
       </Card>
-      {/* 
-      <CommentForm />
-      <Comments /> */}
+
+      {commentFormOpened && <div>댓글</div>}
     </div>
   );
 }
 
 export default PostCard;
+
+PostCard.propTypes = {
+  post: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    User: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      nickname: PropTypes.string.isRequired,
+    }),
+    content: PropTypes.string.isRequired,
+    createdAt: PropTypes.string.isRequired,
+    Comments: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.number.isRequired,
+        content: PropTypes.string.isRequired,
+      })
+    ),
+    Images: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.number.isRequired,
+        src: PropTypes.string.isRequired,
+      })
+    ),
+    Likers: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.number.isRequired,
+      })
+    ),
+    RetweetId: PropTypes.number,
+    Retweet: PropTypes.objectOf(PropTypes.any),
+  }).isRequired,
+};
