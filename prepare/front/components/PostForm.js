@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useRef } from "react";
 
 import { UploadOutlined } from "@ant-design/icons";
-import { Form, Input, Button, Image, message, Space } from "antd";
+import { Form, Input, Button, Space } from "antd";
 
 import { useDispatch } from "react-redux";
 import { addPost } from "../reducers/post";
@@ -19,9 +19,7 @@ const PostForm = () => {
     imageInput.current.click();
   }, [imageInput.current]);
 
-  const onChangeImages = useCallback(() => {
-    console.log("images", e.target.files);
-  }, []);
+  const onChangeImages = useCallback(() => {}, []);
 
   const onSubmit = useCallback(() => {
     dispatch(addPost());
@@ -54,7 +52,7 @@ const PostForm = () => {
         />
       </Form.Item>
 
-      <div style={{ position: "relative", margin: 0 }}>
+      <div style={{ display: "flex", justifyContent: "end", gap: "1rem" }}>
         <Button onClick={onClickImageUpload}>
           <UploadOutlined /> 이미지 업로드
         </Button>
