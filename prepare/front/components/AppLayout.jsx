@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import LoginForm from "./LoginForm";
 import UserProfile from "./UserProfile";
 
-import styled, { createGlobalStyle } from "styled-components";
+import { createGlobalStyle } from "styled-components";
 import { Layout, Menu, Input, Row, Col } from "antd";
 
 import { useSelector } from "react-redux";
@@ -24,10 +24,13 @@ const Global = createGlobalStyle`
 .ant-form-item-explain-error {
   font-size: 11px;
 }
-`;
-
-const SearchInput = styled(Input.Search)`
-  vertical-align: middle;
+.ant-menu-title-content {
+  display: flex;
+  align-items: center;
+}
+.ant-form-item {
+  margin-bottom: 15px;
+}
 `;
 
 const menuItems = [
@@ -48,7 +51,7 @@ const menuItems = [
     key: "profile",
   },
   {
-    label: <SearchInput enterButton />,
+    label: <Input.Search enterButton />,
     key: "search",
   },
 ];
@@ -74,6 +77,7 @@ const AppLayout = ({ children }) => {
         }}
       >
         <Menu
+          style={{ display: "flex", alignItems: "center" }}
           onClick={onMenu}
           selectedKeys={[current]}
           items={menuItems}
