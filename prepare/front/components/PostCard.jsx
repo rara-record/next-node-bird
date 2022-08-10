@@ -1,8 +1,7 @@
 import PropTypes from "prop-types";
-import PostImages from "./PostImages";
 
 import React, { useState, useCallback } from "react";
-import { Avatar, Button, Card, Popover } from "antd";
+import { Avatar, Button, Card, Popover, Divider } from "antd";
 import {
   AlertOutlined,
   DeleteOutlined,
@@ -12,17 +11,18 @@ import {
   HeartTwoTone,
   MessageOutlined,
   RetweetOutlined,
-  ZoomInOutlined,
 } from "@ant-design/icons";
 
 import { useSelector } from "react-redux";
+
+import PostImages from "./PostImages";
+import CommentForm from "./CommentForm";
+import CommentList from "./CommentList";
 
 function PostCard({ post }) {
   const id = useSelector((state) => state.user.me?.id);
   const [liked, setliked] = useState(false);
   const [commentFormOpened, setCommentFormOpened] = useState(false);
-
-  const onZoomPost = useCallback(() => {}, []);
 
   const onRetweet = useCallback(() => {}, []);
 
@@ -95,12 +95,16 @@ function PostCard({ post }) {
         ></Card.Meta>
       </Card>
 
-      {commentFormOpened && <div>댓글</div>}
+      {commentFormOpened && (
+        <div>
+          <Divider plain>{`${post.Comments.length}개의 댓글`}</Divider>
+          <CommentList post={post} />
+          {id && <CommentForm post={post} />}
+        </div>
+      )}
     </div>
   );
 }
-
-export default PostCard;
 
 PostCard.propTypes = {
   post: PropTypes.shape({
@@ -110,7 +114,6 @@ PostCard.propTypes = {
       nickname: PropTypes.string.isRequired,
     }),
     content: PropTypes.string.isRequired,
-    createdAt: PropTypes.string.isRequired,
     Comments: PropTypes.arrayOf(
       PropTypes.shape({
         id: PropTypes.number.isRequired,
@@ -132,3 +135,5 @@ PostCard.propTypes = {
     Retweet: PropTypes.objectOf(PropTypes.any),
   }).isRequired,
 };
+
+export default PostCard;
