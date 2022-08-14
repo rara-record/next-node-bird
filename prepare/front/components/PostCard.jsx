@@ -18,6 +18,7 @@ import { useSelector } from "react-redux";
 import PostImages from "./PostImages";
 import CommentForm from "./CommentForm";
 import CommentList from "./CommentList";
+import PostCardContent from "./PostCardContent";
 
 function PostCard({ post }) {
   const id = useSelector((state) => state.user.me?.id);
@@ -43,7 +44,6 @@ function PostCard({ post }) {
           )
         }
         actions={[
-          // <ZoomInOutlined key="zoom" title="자세히" onClick={onZoomPost} />,
           <RetweetOutlined key="retweet" title="리트윗" onClick={onRetweet} />,
           liked ? (
             <HeartTwoTone
@@ -91,7 +91,7 @@ function PostCard({ post }) {
         <Card.Meta
           avatar={<Avatar>{post.User.nickname[0]}</Avatar>}
           title={post.User.nickname}
-          description={post.content}
+          description={<PostCardContent postContent={post.content} />}
         ></Card.Meta>
       </Card>
 
