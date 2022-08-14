@@ -1,19 +1,24 @@
-import React, { useState, useCallback, useRef } from "react";
+import React, { useCallback, useRef, useEffect } from "react";
 
 import { UploadOutlined } from "@ant-design/icons";
 import { Form, Input, Button, Space } from "antd";
 
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addPost } from "../reducers/post";
+import useInput from "../hooks/useInput";
 
 const PostForm = () => {
   const dispatch = useDispatch();
-  const imageInput = useRef();
-  const [text, setText] = useState("");
 
-  const onChangeText = useCallback((e) => {
-    setText(e.target.value);
-  }, []);
+  const { addPostDone } = useSelector((state) => state.post);
+  const imageInput = useRef();
+  const [text, onChangeText, setText] = useInput("");
+
+  useEffect(() => {
+    if (addPostDone) {
+      setText("");
+    }
+  }, [addPostDone]);
 
   const onClickImageUpload = useCallback(() => {
     imageInput.current.click();
@@ -22,9 +27,8 @@ const PostForm = () => {
   const onChangeImages = useCallback(() => {}, []);
 
   const onSubmit = useCallback(() => {
-    dispatch(addPost());
-    setText("");
-  }, []);
+    dispatch(addPost(text));
+  }, [text]);
 
   return (
     <Form
@@ -61,14 +65,7 @@ const PostForm = () => {
         </Button>
       </div>
 
-      <Space size={8}>
-        {/* {imagePaths.map((v) => <div key={v} style={{ display: 'inline-block '}}>
-          <img src={v} style={{width: "200px"}} alt={v} />
-          <div>
-            <Button>제거</Button>
-          </div>
-        </div>)} */}
-      </Space>
+      <Space size={8}></Space>
     </Form>
   );
 };

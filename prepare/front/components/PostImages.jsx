@@ -5,7 +5,6 @@ import ImagesZoom from "./ImagesZoom";
 
 const PostImages = ({ images }) => {
   const [showImagesZoom, setShowImagesZoom] = useState(false);
-  console.log(showImagesZoom);
 
   const onZoom = useCallback(() => {
     setShowImagesZoom(true);
@@ -74,6 +73,7 @@ const PostImages = ({ images }) => {
           textAlign: "center",
           color: "#fff",
           lineHeight: "30px",
+          cursor: "pointer",
         }}
         onClick={onZoom}
       >
