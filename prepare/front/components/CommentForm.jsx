@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect } from "react";
 import PropTypes from "prop-types";
 import { Form, Input, Button } from "antd";
+import shortId from "shortid";
 
 import useInput from "../hooks/useInput";
 import { useDispatch, useSelector } from "react-redux";
@@ -23,9 +24,10 @@ const CommentForm = ({ post }) => {
   const onSubmitComment = useCallback(() => {
     dispatch(
       addComment({
-        content: commentText,
+        id: shortId.generate(),
         postId: post.id,
         userId: id,
+        content: commentText,
       })
     );
   }, [commentText, id]);

@@ -1,5 +1,6 @@
 import React, { useCallback, useRef, useEffect } from "react";
 import useInput from "../hooks/useInput";
+import shortId from "shortid";
 
 import { UploadOutlined } from "@ant-design/icons";
 import { Form, Input, Button, Space } from "antd";
@@ -10,7 +11,6 @@ import { addPostToMe } from "../reducers/user";
 
 const PostForm = () => {
   const dispatch = useDispatch();
-  const id = useSelector((state) => state.user.me?.id);
   const { addPostDone } = useSelector((state) => state.post);
   const imageInput = useRef();
   const [text, onChangeText, setText] = useInput("");
@@ -28,7 +28,8 @@ const PostForm = () => {
   const onChangeImages = useCallback(() => {}, []);
 
   const onSubmit = useCallback(() => {
-    dispatch(addPost(text));
+    const id = shortId.generate();
+    dispatch(addPost({ id: id, content: text }));
     dispatch(addPostToMe(id));
   }, [text]);
 
