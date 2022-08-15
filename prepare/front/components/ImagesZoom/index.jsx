@@ -12,7 +12,7 @@ import {
   SlickWrapper,
 } from "./styles";
 
-const ImagesZoom = ({ images, onClose }) => {
+const ImagesZoom = ({ id, images, onClose }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
 
   return (

@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import shortId from "shortid";
 
 export const initialState = {
   mainPosts: [
@@ -45,32 +46,44 @@ export const initialState = {
   addCommentError: null,
 };
 
-const dummyPost = {
-  id: 2,
-  content: "더미데이터입니다.",
+const dummyPost = (data) => ({
+  id: shortId.generate(),
+  content: data,
   User: {
-    id: 1,
-    nickname: "제로초",
+    id: 2,
+    nickname: "Bora",
   },
   Images: [],
   Comments: [],
-};
+});
+
+const dummyComment = (data) => ({
+  id: shortId.generate(),
+  content: data,
+  User: {
+    id: 2,
+    nickname: "Bora",
+  },
+});
 
 const postSlice = createSlice({
   name: "post",
   initialState,
   reducers: {
-    addPost(state) {
+    addPost(state, action) {
       state.addPostLoading = false;
       state.addPostDone = true;
-      state.mainPosts = [dummyPost, ...state.mainPosts];
+      state.mainPosts = [dummyPost(action.payload), ...state.mainPosts];
       state.imagePaths = [];
     },
     addComment(state, action) {
-      const post = find(state.mainPosts, { id: action.payload.PostId });
+      const postIndex = state.mainPosts.findIndex(
+        (v) => v.id === action.payload.postId
+      );
+      const post = state.mainPosts[postIndex];
+      post.Comments = [dummyComment(action.payload.content), ...post.Comments];
       state.addCommentLoading = false;
       state.addCommentDone = true;
-      post.Comments.unshift(action.payload);
     },
   },
   // extraReducers: (builder) =>

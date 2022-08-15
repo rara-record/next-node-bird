@@ -36,9 +36,8 @@ const PostForm = () => {
       encType="multipart/form-data"
       onFinish={onSubmit}
     >
-      <Form.Item name="content">
+      <Form.Item>
         <Input.TextArea
-          id="content"
           value={text}
           onChange={onChangeText}
           name="content"

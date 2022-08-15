@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const dummyUser = (data) => ({
   ...data,
   nickname: "제로초",
-  id: 1,
+  id: 2,
   Posts: [],
   Followings: [],
   Followers: [],
@@ -39,6 +39,9 @@ const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
+    addPostToMe(state, action) {
+      state.me.Posts.unshift({ id: action.payload });
+    },
     login(state, action) {
       state.loginLoading = false;
       state.loginDone = true;
