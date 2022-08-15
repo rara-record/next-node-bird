@@ -1,40 +1,34 @@
 import Link from "next/link";
-import PropTypes from "prop-types";
 import styled from "styled-components";
 
 import { Form, Input, Button } from "antd";
-import React, { useState, useCallback } from "react";
+import React, { useCallback } from "react";
 
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { login } from "../reducers/user";
+
+import useInput from "../hooks/useInput";
 
 const LoginForm = () => {
   const dispatch = useDispatch();
-  const [id, setId] = useState("");
-  const [password, setPassword] = useState("");
-
-  const onChangeId = useCallback((e) => {
-    setId(e.target.value);
-  }, []);
-
-  const onChangePassword = useCallback((e) => {
-    setPassword(e.target.value);
-  }, []);
+  const { loginLoading } = useSelector((state) => state.user);
+  const [email, onChangeEmail] = useInput("");
+  const [password, onChangePassword] = useInput("");
 
   const onSubmitForm = useCallback(() => {
-    dispatch(login(id, password));
-  }, [id, password]);
+    dispatch(login(email, password));
+  }, [email, password]);
 
   return (
     <Form onFinish={onSubmitForm}>
       <div>
-        <label htmlFor="user-id">아이디</label>
+        <label htmlFor="user-email">이메일</label>
         <br />
         <Input
-          name="user-id"
+          name="user-email"
           type="e-mail"
-          value={id}
-          onChange={onChangeId}
+          value={email}
+          onChange={onChangeEmail}
           required
         />
       </div>
@@ -52,7 +46,7 @@ const LoginForm = () => {
       </div>
 
       <ButtonWrapper>
-        <Button type="primary" htmlType="submit" loading={false}>
+        <Button type="primary" htmlType="submit" loading={loginLoading}>
           로그인
         </Button>
         <Link href="/signup">
@@ -68,9 +62,5 @@ const LoginForm = () => {
 const ButtonWrapper = styled.div`
   margin-top: 10px;
 `;
-
-LoginForm.ReactPropTypes = {
-  setIsLoggedIn: PropTypes.func.isRequired,
-};
 
 export default LoginForm;

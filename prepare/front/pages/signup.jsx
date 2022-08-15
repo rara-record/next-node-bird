@@ -2,14 +2,16 @@ import React, { useCallback, useState } from "react";
 import { Form, Input, Button, Checkbox } from "antd";
 
 import Head from "next/head";
-import PropTypes from "prop-types";
 import styled from "styled-components";
 
 import AppLayout from "../components/AppLayout";
 import useInput from "../hooks/useInput";
+import { useDispatch } from "react-redux";
+import { signUp } from "../reducers/user";
 
 function signup() {
-  const [id, onChangeId] = useInput("");
+  const dispatch = useDispatch();
+  const [email, onChangeEmail] = useInput("");
   const [nickname, onChangeNickname] = useInput("");
   const [password, onChangePassword] = useInput("");
   const [passwordCheck, setPasswordCheck] = useState("");
@@ -38,7 +40,7 @@ function signup() {
       return setTermError(true);
     }
 
-    console.log(id, nickname, password);
+    dispatch(signUp({ data: { email, password, nickname } }));
   }, [password, passwordCheck, term]);
 
   return (
@@ -48,12 +50,12 @@ function signup() {
       </Head>
       <Form onFinish={onSubmit}>
         <div>
-          <label htmlFor="user-id">아이디</label>
+          <label htmlFor="user-email">이메일</label>
           <br />
           <Input
-            name="user-id"
-            value={id}
-            onChange={onChangeId}
+            name="user-email"
+            value={email}
+            onChange={onChangeEmail}
             required
           ></Input>
         </div>
