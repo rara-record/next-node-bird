@@ -1,15 +1,16 @@
 import React, { useCallback, useRef, useEffect } from "react";
+import useInput from "../hooks/useInput";
 
 import { UploadOutlined } from "@ant-design/icons";
 import { Form, Input, Button, Space } from "antd";
 
 import { useDispatch, useSelector } from "react-redux";
 import { addPost } from "../reducers/post";
-import useInput from "../hooks/useInput";
+import { addPostToMe } from "../reducers/user";
 
 const PostForm = () => {
   const dispatch = useDispatch();
-
+  const id = useSelector((state) => state.user.me?.id);
   const { addPostDone } = useSelector((state) => state.post);
   const imageInput = useRef();
   const [text, onChangeText, setText] = useInput("");
@@ -28,6 +29,7 @@ const PostForm = () => {
 
   const onSubmit = useCallback(() => {
     dispatch(addPost(text));
+    dispatch(addPostToMe(id));
   }, [text]);
 
   return (

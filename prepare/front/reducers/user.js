@@ -5,8 +5,8 @@ const dummyUser = (data) => ({
   nickname: "제로초",
   id: 2,
   Posts: [],
-  Followings: [],
-  Followers: [],
+  Followings: [{ test: 1 }],
+  Followers: [{ test: 1 }],
 });
 
 export const initialState = {
@@ -106,5 +106,5 @@ const userSlice = createSlice({
   //     }),
 });
 
-export const { login, logout, signUp } = userSlice.actions;
+export const { login, logout, signUp, addPostToMe } = userSlice.actions;
 export default userSlice;
