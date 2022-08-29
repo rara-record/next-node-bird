@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { faker } from "@faker-js/faker";
 import shortId from "shortid";
 
 export const initialState = {
@@ -48,6 +49,33 @@ export const initialState = {
   addCommentDone: false,
   addCommentError: null,
 };
+
+initialState.mainPosts = initialState.mainPosts.concat(
+  Array(20)
+    .fill()
+    .map(() => ({
+      id: shortId.generate(),
+      User: {
+        id: shortId.generate(),
+        nickname: faker.internet.userName(),
+      },
+      content: faker.lorem.paragraph(),
+      Comments: [
+        {
+          User: {
+            id: shortId.generate(),
+            nickname: faker.internet.userName(),
+          },
+          content: faker.lorem.sentence(),
+        },
+      ],
+      Images: [
+        {
+          src: faker.image.imageUrl(),
+        },
+      ],
+    }))
+);
 
 const dummyPost = (data) => ({
   id: data.id,
