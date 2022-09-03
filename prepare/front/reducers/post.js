@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import _concat from "lodash/concat";
 import { faker } from "@faker-js/faker";
 import shortId from "shortid";
 
@@ -38,7 +39,11 @@ export const initialState = {
       ],
     },
   ],
+  hasMorePosts: true,
   imagePaths: [],
+  loadPostsLoading: false,
+  loadPostsDone: false,
+  loadPostsError: null,
   addPostLoading: false,
   addPostDone: false,
   addPostError: null,
@@ -50,8 +55,8 @@ export const initialState = {
   addCommentError: null,
 };
 
-initialState.mainPosts = initialState.mainPosts.concat(
-  Array(20)
+export const generateDummyPost = (number) =>
+  Array(number)
     .fill()
     .map(() => ({
       id: shortId.generate(),
@@ -74,8 +79,9 @@ initialState.mainPosts = initialState.mainPosts.concat(
           src: faker.image.imageUrl(),
         },
       ],
-    }))
-);
+    }));
+
+initialState.mainPosts = initialState.mainPosts.concat(generateDummyPost(10));
 
 const dummyPost = (data) => ({
   id: data.id,
@@ -102,6 +108,12 @@ const postSlice = createSlice({
   name: "post",
   initialState,
   reducers: {
+    loadPosts(state, action) {
+      state.loadPostsLoading = false;
+      state.loadPostsDone = true;
+      state.mainPosts = _concat(state.mainPosts, action.payload);
+      state.hasMorePosts = state.mainPosts.length < 50;
+    },
     addPost(state, action) {
       state.addPostLoading = false;
       state.addPostDone = true;
@@ -124,6 +136,22 @@ const postSlice = createSlice({
     },
   },
   extraReducers: (builder) => builder,
+  // loadPosts
+  // .addCase(loadPosts.pending, (state) => {
+  //   state.loadPostsLoading = true;
+  //   state.loadPostsDone = false;
+  //   state.loadPostsError = null;
+  // })
+  // .addCase(loadPosts.fulfilled, (state, action) => {
+  //   state.loadPostsLoading = false;
+  //   state.loadPostsDone = true;
+  //   state.mainPosts =  _concat(state.mainPosts, action.payload);
+  //   state.hasMorePosts = action.payload.length === 10;
+  // })
+  // .addCase(loadPosts.rejected, (state, action) => {
+  //   state.loadPostsLoading = false;
+  //   state.loadPostsError = action.error.message;
+  // })
   // addPost
   // .addCase(addPost.pending, (state) => {
   //   state.addPostLoading = true;
@@ -173,5 +201,5 @@ const postSlice = createSlice({
   // })
 });
 
-export const { addPost, removePost, addComment } = postSlice.actions;
+export const { loadPosts, addPost, removePost, addComment } = postSlice.actions;
 export default postSlice;
