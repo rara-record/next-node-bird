@@ -1,12 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
+import _remove from "lodash/remove";
 
 const dummyUser = (data) => ({
   ...data,
   nickname: "Bora",
   id: 2,
   Posts: [],
-  Followings: [{ test: 1 }],
-  Followers: [{ test: 1 }],
+  Followings: [],
+  Followers: [],
 });
 
 export const initialState = {
@@ -33,12 +34,25 @@ export const initialState = {
   followLoading: false, // 팔로우
   followDone: false,
   followError: null,
+  unfollowLoading: false, // 팔로우
+  unfollowDone: false,
+  unfollowError: null,
 };
 
 const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
+    follow(state, action) {
+      state.followLoading = false;
+      state.followDone = true;
+      state.me.Followings.push({ id: action.payload.userId });
+    },
+    unfollow(state, action) {
+      state.unfollowLoading = false;
+      state.unfollowDone = true;
+      _remove(state.me.Followings, { id: action.payload.userId });
+    },
     addPostToMe(state, action) {
       state.me.Posts.unshift({ id: action.payload });
     },
@@ -139,6 +153,13 @@ const userSlice = createSlice({
   //     }),
 });
 
-export const { login, logout, signUp, addPostToMe, removePostToMe } =
-  userSlice.actions;
+export const {
+  login,
+  logout,
+  signUp,
+  addPostToMe,
+  removePostToMe,
+  follow,
+  unfollow,
+} = userSlice.actions;
 export default userSlice;
