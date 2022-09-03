@@ -18,6 +18,7 @@ import { useDispatch, useSelector } from "react-redux";
 import PostImages from "./PostImages";
 import CommentForm from "./CommentForm";
 import CommentList from "./CommentList";
+import FollowButton from "./FollowButton";
 import PostCardContent from "./PostCardContent";
 import { removePost } from "../reducers/post";
 import { removePostToMe } from "../reducers/user";
@@ -48,7 +49,7 @@ function PostCard({ post }) {
     <div style={{ marginBottom: 20 }}>
       <Card
         cover={
-          post.Images[0] && (
+          post?.Images[0] && (
             <PostImages id={post.User.id} images={post.Images} />
           )
         }
@@ -100,6 +101,7 @@ function PostCard({ post }) {
             <EllipsisOutlined />
           </Popover>,
         ]}
+        extra={id && <FollowButton post={post} />}
       >
         <Card.Meta
           avatar={<Avatar>{post.User.nickname[0]}</Avatar>}
