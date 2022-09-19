@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect } from "react";
 import PropTypes from "prop-types";
 import { Form, Input, Button } from "antd";
+import shortId from "shortid";
 
 import useInput from "../hooks/useInput";
 import { useDispatch, useSelector } from "react-redux";
@@ -9,7 +10,9 @@ import { addComment } from "../reducers/post";
 const CommentForm = ({ post }) => {
   const dispatch = useDispatch();
   const id = useSelector((state) => state.user.me?.id);
-  const { addCommentDone } = useSelector((state) => state.post);
+  const { addCommentDone, addCommentLoading } = useSelector(
+    (state) => state.post
+  );
   const [commentText, onChangeCommentText, setCommentText] = useInput("");
 
   useEffect(() => {
@@ -21,16 +24,18 @@ const CommentForm = ({ post }) => {
   const onSubmitComment = useCallback(() => {
     dispatch(
       addComment({
-        data: { content: commentText, postId: post.id, userId: id },
+        id: shortId.generate(),
+        postId: post.id,
+        userId: id,
+        content: commentText,
       })
     );
   }, [commentText, id]);
 
   return (
     <Form onFinish={onSubmitComment}>
-      <Form.Item name="content">
+      <Form.Item>
         <Input.TextArea
-          name="content"
           maxLength={50}
           value={commentText}
           onChange={onChangeCommentText}
@@ -39,7 +44,12 @@ const CommentForm = ({ post }) => {
         />
       </Form.Item>
       <div style={{ display: "flex", justifyContent: "end" }}>
-        <Button type="primary" htmlType="submit">
+        <Button
+          type="primary"
+          htmlType="submit"
+          style={{ zIndex: 1 }}
+          loading={addCommentLoading}
+        >
           댓글달기
         </Button>
       </div>

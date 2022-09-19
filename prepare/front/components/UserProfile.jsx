@@ -10,7 +10,6 @@ import { logout } from "../reducers/user";
 const UserProfile = () => {
   const dispatch = useDispatch();
   const { me, logoutLoading } = useSelector((state) => state.user);
-  console.log(me.Followers.length);
 
   const onLogout = useCallback(() => {
     dispatch(logout());

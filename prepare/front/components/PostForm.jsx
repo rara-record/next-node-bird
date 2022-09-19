@@ -1,15 +1,16 @@
 import React, { useCallback, useRef, useEffect } from "react";
+import useInput from "../hooks/useInput";
+import shortId from "shortid";
 
 import { UploadOutlined } from "@ant-design/icons";
 import { Form, Input, Button, Space } from "antd";
 
 import { useDispatch, useSelector } from "react-redux";
 import { addPost } from "../reducers/post";
-import useInput from "../hooks/useInput";
+import { addPostToMe } from "../reducers/user";
 
 const PostForm = () => {
   const dispatch = useDispatch();
-
   const { addPostDone } = useSelector((state) => state.post);
   const imageInput = useRef();
   const [text, onChangeText, setText] = useInput("");
@@ -27,7 +28,9 @@ const PostForm = () => {
   const onChangeImages = useCallback(() => {}, []);
 
   const onSubmit = useCallback(() => {
-    dispatch(addPost(text));
+    const id = shortId.generate();
+    dispatch(addPost({ id: id, content: text }));
+    dispatch(addPostToMe(id));
   }, [text]);
 
   return (
@@ -36,9 +39,8 @@ const PostForm = () => {
       encType="multipart/form-data"
       onFinish={onSubmit}
     >
-      <Form.Item name="content">
+      <Form.Item>
         <Input.TextArea
-          id="content"
           value={text}
           onChange={onChangeText}
           name="content"

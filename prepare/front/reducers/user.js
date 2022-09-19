@@ -1,9 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
+import _remove from "lodash/remove";
 
 const dummyUser = (data) => ({
   ...data,
-  nickname: "제로초",
-  id: 1,
+  nickname: "Bora",
+  id: 2,
   Posts: [],
   Followings: [],
   Followers: [],
@@ -33,12 +34,31 @@ export const initialState = {
   followLoading: false, // 팔로우
   followDone: false,
   followError: null,
+  unfollowLoading: false, // 팔로우
+  unfollowDone: false,
+  unfollowError: null,
 };
 
 const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
+    follow(state, action) {
+      state.followLoading = false;
+      state.followDone = true;
+      state.me.Followings.push({ id: action.payload.userId });
+    },
+    unfollow(state, action) {
+      state.unfollowLoading = false;
+      state.unfollowDone = true;
+      _remove(state.me.Followings, { id: action.payload.userId });
+    },
+    addPostToMe(state, action) {
+      state.me.Posts.unshift({ id: action.payload });
+    },
+    removePostToMe(state, action) {
+      state.me.Posts = state.me.Posts.filter((v) => v.id !== action.payload);
+    },
     login(state, action) {
       state.loginLoading = false;
       state.loginDone = true;
@@ -88,20 +108,58 @@ const userSlice = createSlice({
   //       state.logoutError = action.payload;
   //     })
   //     // signup
-  //     .addCase(signup.pending, (state) => {
+  //     .addCase(signUp.pending, (state) => {
   //       state.signupLoading = true;
   //       state.signupDone = false;
   //       state.signupError = null;
   //     })
-  //     .addCase(signup.fulfilled, (state) => {
+  //     .addCase(signUp.fulfilled, (state) => {
   //       state.signupLoading = false;
   //       state.signupDone = true;
   //     })
-  //     .addCase(signup.rejected, (state, action) => {
+  //     .addCase(signUp.rejected, (state, action) => {
+  //       state.signupLoading = false;
+  //       state.signupError = action.payload;
+  //     })
+  //     // addPostToMe
+  //     .addCase(addPostToMe.pending, (state) => {
+  //       state.addPostToMeLoading = true;
+  //       state.addPostToMeDone = false;
+  //       state.addPostToMeError = null;
+  //     })
+  //     .addCase(addPostToMe.fulfilled, (state,action) => {
+  //       state.addPostToMeLoading = false;
+  //       state.addPostToMeDone = true;
+  //       state.me.Posts.unshift({ id: action.payload });
+  //     })
+  //     .addCase(addPostToMe.rejected, (state, action) => {
+  //       state.signupLoading = false;
+  //       state.signupError = action.payload;
+  //     })
+  //     // removePostToMe
+  //     .addCase(removePostToMe.pending, (state) => {
+  //       state.removePostToMeLoading = true;
+  //       state.removePostToMeDone = false;
+  //       state.removePostToMeError = null;
+  //     })
+  //     .addCase(removePostToMe.fulfilled, (state,action) => {
+  //       state.removePostToMeLoading = false;
+  //       state.removePostToMeDone = true;
+  //       state.me.Posts = state.me.Posts.filter((v) => v.id !== action.payload);
+  //     })
+  //     .addCase(removePostToMe.rejected, (state, action) => {
   //       state.signupLoading = false;
   //       state.signupError = action.payload;
   //     }),
 });
 
-export const { login, logout, signUp } = userSlice.actions;
+export const {
+  login,
+  logout,
+  signUp,
+  addPostToMe,
+  removePostToMe,
+  follow,
+  unfollow,
+} = userSlice.actions;
 export default userSlice;

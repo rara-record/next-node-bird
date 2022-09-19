@@ -44,7 +44,7 @@ const menuItems = [
   },
   {
     label: (
-      <Link href="/">
+      <Link href="/profile">
         <a>프로필</a>
       </Link>
     ),

@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { PlusOutlined } from "@ant-design/icons";
 import ImagesZoom from "./ImagesZoom";
 
-const PostImages = ({ images }) => {
+const PostImages = ({ id, images }) => {
   const [showImagesZoom, setShowImagesZoom] = useState(false);
 
   const onZoom = useCallback(() => {
@@ -23,7 +23,9 @@ const PostImages = ({ images }) => {
           alt={images[0].src}
           onClick={onZoom}
         />
-        {showImagesZoom && <ImagesZoom images={images} onClose={onClose} />}
+        {showImagesZoom && (
+          <ImagesZoom id={id} images={images} onClose={onClose} />
+        )}
       </div>
     );
   }

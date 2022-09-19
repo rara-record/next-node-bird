@@ -1,11 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
+import _concat from "lodash/concat";
+import { faker } from "@faker-js/faker";
+import shortId from "shortid";
 
 export const initialState = {
   mainPosts: [
     {
-      id: 1,
+      id: shortId.generate(),
       User: {
-        id: 1,
+        id: shortId.generate(),
         nickname: "제로초",
       },
       content: "첫 번째 게시글 #헤시태그 #익스프레스",
@@ -36,78 +39,167 @@ export const initialState = {
       ],
     },
   ],
+  hasMorePosts: true,
   imagePaths: [],
+  loadPostsLoading: false,
+  loadPostsDone: false,
+  loadPostsError: null,
   addPostLoading: false,
   addPostDone: false,
   addPostError: null,
+  removePostLoading: false,
+  removePostDone: false,
+  removePostError: null,
   addCommentLoading: false,
   addCommentDone: false,
   addCommentError: null,
 };
 
-const dummyPost = {
-  id: 2,
-  content: "더미데이터입니다.",
+export const generateDummyPost = (number) =>
+  Array(number)
+    .fill()
+    .map(() => ({
+      id: shortId.generate(),
+      User: {
+        id: shortId.generate(),
+        nickname: faker.internet.userName(),
+      },
+      content: faker.lorem.paragraph(),
+      Comments: [
+        {
+          User: {
+            id: shortId.generate(),
+            nickname: faker.internet.userName(),
+          },
+          content: faker.lorem.sentence(),
+        },
+      ],
+      Images: [
+        {
+          src: faker.image.imageUrl(),
+        },
+      ],
+    }));
+
+initialState.mainPosts = initialState.mainPosts.concat(generateDummyPost(10));
+
+const dummyPost = (data) => ({
+  id: data.id,
+  content: data.content,
   User: {
-    id: 1,
-    nickname: "제로초",
+    id: 2,
+    nickname: "Bora",
   },
   Images: [],
   Comments: [],
-};
+});
+
+const dummyComment = (data) => ({
+  id: data.id,
+  content: data.content,
+  postId: data.postId,
+  User: {
+    id: 2,
+    nickname: "Bora",
+  },
+});
 
 const postSlice = createSlice({
   name: "post",
   initialState,
   reducers: {
-    addPost(state) {
+    loadPosts(state, action) {
+      state.loadPostsLoading = false;
+      state.loadPostsDone = true;
+      state.mainPosts = _concat(state.mainPosts, action.payload);
+      state.hasMorePosts = state.mainPosts.length < 50;
+    },
+    addPost(state, action) {
       state.addPostLoading = false;
       state.addPostDone = true;
-      state.mainPosts = [dummyPost, ...state.mainPosts];
+      state.mainPosts = [dummyPost(action.payload), ...state.mainPosts];
       state.imagePaths = [];
     },
+    removePost(state, action) {
+      state.removePostLoading = false;
+      state.removePostDone = true;
+      state.mainPosts = state.mainPosts.filter((v) => v.id !== action.payload);
+    },
     addComment(state, action) {
-      const post = find(state.mainPosts, { id: action.payload.PostId });
+      const postIndex = state.mainPosts.findIndex(
+        (v) => v.id === action.payload.postId
+      );
+      const post = state.mainPosts[postIndex];
+      post.Comments = [dummyComment(action.payload), ...post.Comments];
       state.addCommentLoading = false;
       state.addCommentDone = true;
-      post.Comments.unshift(action.payload);
     },
   },
-  // extraReducers: (builder) =>
-  //   builder
-  //   // addPost
-  //     .addCase(addPost.pending, (state) => {
-  //       state.addPostLoading = true;
-  //       state.addPostDone = false;
-  //       state.addPostError = null;
-  //     })
-  //     .addCase(addPost.fulfilled, (state, action) => {
-  //       state.addPostLoading = false;
-  //       state.addPostDone = true;
-  //       state.mainPosts.unshift(action.payload);
-  //       state.imagePaths = [];
-  //     })
-  //     .addCase(addPost.rejected, (state, action) => {
-  //       state.addPostLoading = false;
-  //       state.addPostError = action.error.message;
-  //     })
-  //     // addCommnet
-  //     .addCase(addComment.pending, (state) => {
-  //       state.addCommentLoading = true;
-  //       state.addCommentDone = false;
-  //       state.addCommentError = null;
-  //     })
-  //     .addCase(addComment.fulfilled, (state, action) => {
-  //       const post = find(state.mainPosts, { id: action.payload.PostId });
-  //       state.addCommentLoading = false;
-  //       state.addCommentDone = true;
-  //       post.Comments.unshift(action.payload);
-  //     })
-  //     .addCase(addComment.rejected, (state, action) => {
-  //       state.addCommentLoading = false;
-  //       state.addCommentError = action.error.message;
-  //     })
+  extraReducers: (builder) => builder,
+  // loadPosts
+  // .addCase(loadPosts.pending, (state) => {
+  //   state.loadPostsLoading = true;
+  //   state.loadPostsDone = false;
+  //   state.loadPostsError = null;
+  // })
+  // .addCase(loadPosts.fulfilled, (state, action) => {
+  //   state.loadPostsLoading = false;
+  //   state.loadPostsDone = true;
+  //   state.mainPosts =  _concat(state.mainPosts, action.payload);
+  //   state.hasMorePosts = action.payload.length === 10;
+  // })
+  // .addCase(loadPosts.rejected, (state, action) => {
+  //   state.loadPostsLoading = false;
+  //   state.loadPostsError = action.error.message;
+  // })
+  // addPost
+  // .addCase(addPost.pending, (state) => {
+  //   state.addPostLoading = true;
+  //   state.addPostDone = false;
+  //   state.addPostError = null;
+  // })
+  // .addCase(addPost.fulfilled, (state, action) => {
+  //   state.addPostLoading = false;
+  //   state.addPostDone = true;
+  //   state.mainPosts.unshift(action.payload);
+  //   state.imagePaths = [];
+  // })
+  // .addCase(addPost.rejected, (state, action) => {
+  //   state.addPostLoading = false;
+  //   state.addPostError = action.error.message;
+  // })
+  // // addCommnet
+  // .addCase(addComment.pending, (state) => {
+  //   state.addCommentLoading = true;
+  //   state.addCommentDone = false;
+  //   state.addCommentError = null;
+  // })
+  // .addCase(addComment.fulfilled, (state, action) => {
+  //   const post = find(state.mainPosts, { id: action.payload.PostId });
+  //   state.addCommentLoading = false;
+  //   state.addCommentDone = true;
+  //   post.Comments.unshift(action.payload);
+  // })
+  // .addCase(addComment.rejected, (state, action) => {
+  //   state.addCommentLoading = false;
+  //   state.addCommentError = action.error.message;
+  // })
+  // // removePost
+  // .addCase(removePost.pending, (state) => {
+  //   state.removePostLoading = true;
+  //   state.removePostDone = false;
+  //   state.removePostError = null;
+  // })
+  // .addCase(removePost.fulfilled, (state, action) => {
+  //   state.removePostLoading = false;
+  //   state.removePostDone = true;
+  //   state.mainPosts = state.mainPosts.filter((v) => v.id !== action.payload);
+  // })
+  // .addCase(removePost.rejected, (state, action) => {
+  //   state.removePostLoading = false;
+  //   state.removePostError = action.error.message;
+  // })
 });
 
-export const { addPost, addComment } = postSlice.actions;
+export const { loadPosts, addPost, removePost, addComment } = postSlice.actions;
 export default postSlice;

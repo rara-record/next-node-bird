@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 
 import React, { useState, useCallback } from "react";
-import { Avatar, Button, Card, Popover, Divider } from "antd";
+import { Avatar, Button, Card, Popover, Divider, Popconfirm } from "antd";
 import {
   AlertOutlined,
   DeleteOutlined,
@@ -13,19 +13,29 @@ import {
   RetweetOutlined,
 } from "@ant-design/icons";
 
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import PostImages from "./PostImages";
 import CommentForm from "./CommentForm";
 import CommentList from "./CommentList";
+import FollowButton from "./FollowButton";
 import PostCardContent from "./PostCardContent";
+import { removePost } from "../reducers/post";
+import { removePostToMe } from "../reducers/user";
 
 function PostCard({ post }) {
+  const dispatch = useDispatch();
   const id = useSelector((state) => state.user.me?.id);
+  const { removePostLoading } = useSelector((state) => state.post);
   const [liked, setliked] = useState(false);
   const [commentFormOpened, setCommentFormOpened] = useState(false);
 
   const onRetweet = useCallback(() => {}, []);
+
+  const onRemovePost = useCallback(() => {
+    dispatch(removePost(post.id));
+    dispatch(removePostToMe(post.id));
+  }, []);
 
   const onToggleLike = useCallback(() => {
     setliked((prev) => !prev);
@@ -39,7 +49,7 @@ function PostCard({ post }) {
     <div style={{ marginBottom: 20 }}>
       <Card
         cover={
-          post.Images[0] && (
+          post?.Images[0] && (
             <PostImages id={post.User.id} images={post.Images} />
           )
         }
@@ -66,15 +76,19 @@ function PostCard({ post }) {
               <Button.Group>
                 {id && post.User.id === id ? (
                   <>
-                    {!post.RetweetId && (
-                      <Button>
-                        <EditOutlined /> 수정
-                      </Button>
-                    )}
-
-                    <Button type="danger">
-                      <DeleteOutlined /> 삭제
+                    <Button>
+                      <EditOutlined /> 수정
                     </Button>
+                    <Popconfirm
+                      title="Are you sure delete this task?"
+                      okText="Yes"
+                      onConfirm={onRemovePost}
+                      cancelText="No"
+                    >
+                      <Button type="danger" loading={removePostLoading}>
+                        <DeleteOutlined /> 삭제
+                      </Button>
+                    </Popconfirm>
                   </>
                 ) : (
                   <Button>
@@ -87,6 +101,7 @@ function PostCard({ post }) {
             <EllipsisOutlined />
           </Popover>,
         ]}
+        extra={id && <FollowButton post={post} />}
       >
         <Card.Meta
           avatar={<Avatar>{post.User.nickname[0]}</Avatar>}
